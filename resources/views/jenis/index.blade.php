@@ -40,7 +40,7 @@
                                             <label for="">Jenis Rekening</label>
                                             <input type="text" name="jenis" class="form-control" required id="">
                                         </div>
-                                        
+
                                         <div class="form-group">
                                             <button type="submit" class="btn btn-success float-right" id="">Simpan</button>
                                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -67,7 +67,7 @@
                                         </div>
 
                                         <input type="hidden" name="id" id="id">
-                                        
+
                                         <div class="form-group">
                                             <button type="submit" class="btn btn-success float-right" id="">Simpan</button>
                                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -91,7 +91,7 @@
                                         <div class="form-group">
                                             <label for="">Jenis Rekening</label>
                                             <input type="text" name="jenis" id='rekening' class="form-control" disabled id="">
-                                        </div>                                        
+                                        </div>
                                         <div class="form-group">
                                             <button type="button" class="btn btn-danger float-right" data-dismiss="modal">Close</button>
                                         </div>
@@ -101,9 +101,9 @@
                         </div>
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body" style="background-color:#ffffff">
                         <div class="table-responsive">
-                            <table class="table text-center">
+                            <table id="table" class="table text-center">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>Nomor</th>
@@ -111,7 +111,7 @@
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-white">
+                                <tbody class="text-center">
                                     @php
                                         $i = 1;
                                     @endphp
@@ -125,13 +125,13 @@
                                                 </button>
                                                 <button role="button" class="btn btn-warning text-white" data-iddata='{{$data->id}}' data-jenis-data='{{$data->jenis_rekening}}' data-toggle="modal" data-target="#ModalEdit">
                                                         Edit
-                                                </button> 
+                                                </button>
                                                 <form action="{{ route('jenis.destroy',$data->id)}}" method="post">
                                                     @method('delete')
                                                     @csrf
                                                     <input class="btn btn-danger" type="submit" value="Hapus">
                                                 </form>
-                                                
+
                                                 {{-- <a href="{{route('jenis.destroy',$dat  a->id)}}"> Hapus</a> --}}
                                             </td>
                                         </tr>
@@ -161,4 +161,15 @@
     modal.find('.modal-body #rekening').val(jenis);
     })
 </script>
+@endsection
+@section('script')
+    <script>
+    $('#table').DataTable({
+        orderCellsTop: true,
+        searching: true,
+        pagingType: "full_numbers",
+        lengthChange: false,
+        pageLength: 5,
+    });
+    </script>
 @endsection

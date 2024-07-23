@@ -23,7 +23,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('bank', 'CabangBankController');
 Route::resource('jenis', 'JenisController');
 Route::resource('nasabah', 'NasabahController');
-// Route::get('nasabah/{implode}', 'RekeningController@create')->name('RekeningController');
+Route::post('/nasabah/pdf', 'NasabahController@pdf')->name('nasabah.pdf');
 Route::resource('pegawai', 'PegawaiController');
 Route::get('rekening/create/{implode}', 'RekeningController@create');
 Route::resource('rekening', 'RekeningController');

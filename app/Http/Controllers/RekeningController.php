@@ -11,6 +11,7 @@ use App\nasabah_rekening_pegawai;
 use App\kartu;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Dompdf\Dompdf;
 
 class RekeningController extends Controller
 {
@@ -118,7 +119,7 @@ class RekeningController extends Controller
         $rekening = rekening::findorfail($id);
         $jenis = jenis::all();
         $kartu = kartu::findorfail($rekening->id_kartu);
-        
+
             return view('rekening.edit',compact('rekening','kartu','jenis'));
     }
 
@@ -164,16 +165,39 @@ class RekeningController extends Controller
             $nasabah = nasabah::findorfail($key->id);
             $rekening->find($id)->Nasabah()->detach();
             $h = $nasabah->Rekening()->count();
-            
+
         }
             if ($h == 0) {
                 $nasabah->delete();
             }
-        
+
         $kartu = kartu::findorfail($rekening->id_kartu);
         $kartu->delete();
         $rekening->delete();
-        
+
         return redirect()->route('nasabah.index');
+    }
+
+    public function pdf()
+    {
+        try {
+            $nasabah = rekening::all();
+            if ($nasabah != null || $nasabah != false) {
+                $body = view('nasabah.print', compact('nasabah'))->render();
+
+                $pdf = new Dompdf();
+                $pdf->loadHtml($body);
+                $pdf->setPaper('A4', 'portrait');
+                $pdf->render();
+
+                return $pdf->stream('document.pdf');
+            }
+        } catch (\Throwable $th) {
+            return response([
+                'status' => false,
+                'message' => 'Failed to See data'
+            ], 400);
+        }
+
     }
 }

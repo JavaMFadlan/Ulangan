@@ -6,6 +6,7 @@ use App\kartu;
 use App\rekening;
 use App\nasabah;
 use Illuminate\Http\Request;
+use Dompdf\Dompdf;
 
 class KartuController extends Controller
 {
@@ -80,7 +81,7 @@ class KartuController extends Controller
         // dd($request->all());
         $kartu = kartu::findorfail($id);
         $kartu->no_sandi= $request->no_sandi;
-        $kartu->update(); 
+        $kartu->update();
         return redirect()->route('nasabah.index');
     }
 
@@ -100,16 +101,39 @@ class KartuController extends Controller
             $nasabah = nasabah::findorfail($key->id);
             $rekening1->find($id)->Nasabah()->detach();
             $h = $nasabah->Rekening()->count();
-            
+
         }
             if ($h == 0) {
                 $nasabah->delete();
             }
-        
+
         $kartu = kartu::findorfail($id);
         $kartu->delete();
         $rekening1->delete();
-        
+
         return redirect()->route('nasabah.index');
+    }
+
+    public function pdf()
+    {
+        try {
+            $nasabah = kartu::all();
+            if ($nasabah != null || $nasabah != false) {
+                $body = view('nasabah.print', compact('nasabah'))->render();
+
+                $pdf = new Dompdf();
+                $pdf->loadHtml($body);
+                $pdf->setPaper('A4', 'portrait');
+                $pdf->render();
+
+                return $pdf->stream('document.pdf');
+            }
+        } catch (\Throwable $th) {
+            return response([
+                'status' => false,
+                'message' => 'Failed to See data'
+            ], 400);
+        }
+
     }
 }

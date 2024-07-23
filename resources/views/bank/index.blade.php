@@ -103,7 +103,7 @@
                 </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table text-center">
+                            <table id="table" class="table text-center">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>Nomor</th>
@@ -119,7 +119,7 @@
                                         $i = 1;
                                     @endphp
                                     @foreach ($bank as $data)
-                                    
+
                                         <tr>
                                             <td>{{$i++}}</td>
                                             <td>{{$data->nama_bank}}</td>
@@ -159,4 +159,15 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script>
+    $('#table').DataTable({
+        orderCellsTop: true,
+        searching: true,
+        pagingType: "full_numbers",
+        lengthChange: false,
+        pageLength: 5,
+    });
+    </script>
 @endsection

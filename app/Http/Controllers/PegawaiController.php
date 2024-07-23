@@ -7,6 +7,7 @@ use App\nasabah;
 use App\rekening;
 use App\cabang_bank;
 use Illuminate\Http\Request;
+use Dompdf\Dompdf;
 
 class PegawaiController extends Controller
 {
@@ -19,7 +20,7 @@ class PegawaiController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index()
     {
         $pegawai = pegawai::with('cabang_bank')->get();
@@ -27,11 +28,11 @@ class PegawaiController extends Controller
         // foreach ($pegawai as $data) {
         //     foreach ($data->nasabah as $key) {
         //         dd($key);
-                
+
         //     }
         // }
         return view('pegawai.index',compact('pegawai','bank'));
-        
+
     }
 
     /**
@@ -59,8 +60,8 @@ class PegawaiController extends Controller
         $pegawai = new pegawai();
         $pegawai->no_pegawai = $request->no;
         $pegawai->nama = $request->nama;
-        $pegawai->alamat = $request->alamat; 
-        $pegawai->tgl_lahir = $request->tgl; 
+        $pegawai->alamat = $request->alamat;
+        $pegawai->tgl_lahir = $request->tgl;
         $pegawai->id_bank = $request->bank;
         $pegawai->save();
         return redirect()->route('pegawai.index')->with(['message' => 'pegawai Berhasil Didaftarkan']);
@@ -101,12 +102,12 @@ class PegawaiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $pegawai = pegawai::findorfail($id);
         $pegawai->no_pegawai = $request->no;
         $pegawai->nama = $request->nama;
-        $pegawai->alamat = $request->alamat; 
-        $pegawai->tgl_lahir = $request->tgl; 
+        $pegawai->alamat = $request->alamat;
+        $pegawai->tgl_lahir = $request->tgl;
         $pegawai->id_bank = $request->bank;
         $pegawai->update();
         return redirect()->route('pegawai.index')->with(['message' => 'pegawai Berhasil Didaftarkan']);
@@ -151,5 +152,28 @@ class PegawaiController extends Controller
             # code...
         // }
             return redirect()->route('pegawai.index')->with(['message' => 'pegawai Berhasil Dihapus']);
+    }
+
+    public function pdf()
+    {
+        try {
+            $nasabah = pegawai::all();
+            if ($nasabah != null || $nasabah != false) {
+                $body = view('nasabah.print', compact('nasabah'))->render();
+
+                $pdf = new Dompdf();
+                $pdf->loadHtml($body);
+                $pdf->setPaper('A4', 'portrait');
+                $pdf->render();
+
+                return $pdf->stream('document.pdf');
+            }
+        } catch (\Throwable $th) {
+            return response([
+                'status' => false,
+                'message' => 'Failed to See data'
+            ], 400);
+        }
+
     }
 }

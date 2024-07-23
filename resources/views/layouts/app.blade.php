@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Bank') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
@@ -18,13 +18,15 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.0/css/dataTables.dataTables.css" />
 </head>
-<body style="background-color:#000000">
+<body style="background-color:#ffffff">
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-dark shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light  shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    Perbankan
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -34,21 +36,21 @@
                     <ul class="navbar-nav mr-auto">
                         @guest
                             @else
-                        
+
                         <li>
-                            <a href="{{route('bank.index')}}" class="nav-link text-white">Bank</a>
+                            <a href="{{route('bank.index')}}" class="nav-link ">Bank</a>
                         </li>
 
                         <li>
-                            <a href="{{route('jenis.index')}}" class="nav-link text-white">Jenis</a>
+                            <a href="{{route('jenis.index')}}" class="nav-link ">Jenis</a>
                         </li>
 
                         <li>
-                            <a href="{{route('pegawai.index')}}" class="nav-link text-white">Pegawai</a>
+                            <a href="{{route('pegawai.index')}}" class="nav-link ">Pegawai</a>
                         </li>
 
                         <li>
-                            <a href="{{route('nasabah.index')}}" class="nav-link text-white">Nasabah</a>
+                            <a href="{{route('nasabah.index')}}" class="nav-link ">Nasabah</a>
                         </li>
                         @endguest
                     </ul>
@@ -98,5 +100,8 @@
             @yield('content')
         </main>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/2.1.0/js/dataTables.js"></script>
+    @yield('script')
 </body>
 </html>

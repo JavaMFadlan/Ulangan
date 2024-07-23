@@ -24,11 +24,13 @@ class CreateRekeningsTable extends Migration
         Schema::create('rekenings', function (Blueprint $table) {
             $table->id();
             $table->Biginteger('no_rekening')->unique();
+            $table->UnsignedBiginteger('id_bank');
             $table->UnsignedBiginteger('id_kartu');
             $table->unsignedBigInteger('id_jenis');
             $table->integer('saldo');
             $table->date('masa_pakai');
             $table->string('aktif');
+            $table->foreign('id_bank')->references('id')->on('cabang_banks')->onDelete('cascade');
             $table->foreign('id_kartu')->references('id')->on('kartus')->onDelete('cascade');
             $table->foreign('id_jenis')->references('id')->on('jenis')->onDelete('cascade');
             $table->timestamps();

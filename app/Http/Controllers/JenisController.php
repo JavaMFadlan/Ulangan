@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\jenis;
 use Illuminate\Http\Request;
+use Dompdf\Dompdf;
 
 class JenisController extends Controller
 {
@@ -12,7 +13,7 @@ class JenisController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -55,7 +56,7 @@ class JenisController extends Controller
      */
     public function show($id)
     {
-        
+
     }
 
     /**
@@ -66,8 +67,8 @@ class JenisController extends Controller
      */
     public function edit($id)
     {
-        
-        
+
+
     }
 
     /**

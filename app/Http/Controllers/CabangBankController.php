@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\cabang_bank;
+use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 
 class CabangBankController extends Controller
@@ -74,7 +75,7 @@ class CabangBankController extends Controller
     {
         $bank = cabang_bank::findorfail($id);
         return view('bank.edit',compact('bank'));
-        
+
     }
 
     /**
@@ -107,5 +108,28 @@ class CabangBankController extends Controller
     {
         $bank = cabang_bank::findorfail($id)->delete();
         return redirect()->route('bank.index')->with(['message1' => 'Data Berhasil Dihapus']);
+    }
+
+    public function pdf()
+    {
+        try {
+            $nasabah = cabang_bank::all();
+            if ($nasabah != null || $nasabah != false) {
+                $body = view('nasabah.print', compact('nasabah'))->render();
+
+                $pdf = new Dompdf();
+                $pdf->loadHtml($body);
+                $pdf->setPaper('A4', 'portrait');
+                $pdf->render();
+
+                return $pdf->stream('document.pdf');
+            }
+        } catch (\Throwable $th) {
+            return response([
+                'status' => false,
+                'message' => 'Failed to See data'
+            ], 400);
+        }
+
     }
 }

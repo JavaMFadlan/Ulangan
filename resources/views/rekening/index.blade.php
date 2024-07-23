@@ -22,7 +22,7 @@
                     </div>
                     <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table text-center">
+                                <table id="table" class="table text-center">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>No</th>
@@ -50,7 +50,7 @@
                                                         @endforeach
                                                     </ul>
                                                 </td>
-                                                <td> 
+                                                <td>
                                                     <form action="{{ route('nasabah.destroy',$data->id)}}" method="post">
                                                         @method('delete')
                                                         @csrf
@@ -74,4 +74,18 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script>
+    $('#table').DataTable({
+        orderCellsTop: true,
+        searching: true,
+        pagingType: "full_numbers",
+        lengthChange: false,
+        pageLength: 5,
+        drawCallBack: function (params) {
+            $('.dt-search-0').addClass('text-white');
+        }
+    });
+    </script>
 @endsection

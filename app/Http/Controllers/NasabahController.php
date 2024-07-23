@@ -8,6 +8,7 @@ use App\pegawai;
 use App\cabang_bank;
 use App\kartu;
 use App\jenis;
+use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 
 class NasabahController extends Controller
@@ -83,7 +84,7 @@ class NasabahController extends Controller
             foreach($nasabah->rekening as $data => $value){
                 $kartu[] = kartu::findorfail($value->id_kartu);
                 $jenis[] = jenis::findorfail($value->id_jenis);
-            
+
             }
             // foreach ($nasabah->pegawai as $key) {
                 // $cuma = $key->pegawai->unique()->values()->all();
@@ -92,8 +93,8 @@ class NasabahController extends Controller
             $cuma = $nasabah->pegawai->unique();
             // $kartu = implode(',',$kartu1);
             // dd($implode_kartu);
-            
-            
+
+
             // if(array_unique($bank)){
             //     dd($bank);
             // }
@@ -116,7 +117,7 @@ class NasabahController extends Controller
             foreach($nasabah->rekening as $data => $value){
                 $kartu[] = kartu::findorfail($value->id_kartu);
             //     $jenis[] = jenis::findorfail($value->id_jenis);
-            
+
             }
             // foreach($nasabah->pegawai as $item){
             //     $bank[] = cabang_bank::findorfail($item->id_bank);
@@ -160,5 +161,28 @@ class NasabahController extends Controller
         $nasabah->Rekening()->detach();
         $nasabah->delete();
         return redirect()->route('nasabah.index');
+    }
+
+    public function pdf()
+    {
+        try {
+            $nasabah = nasabah::all();
+            if ($nasabah != null || $nasabah != false) {
+                $body = view('nasabah.print', compact('nasabah'))->render();
+
+                $pdf = new Dompdf();
+                $pdf->loadHtml($body);
+                $pdf->setPaper('A4', 'portrait');
+                $pdf->render();
+
+                return $pdf->stream('document.pdf');
+            }
+        } catch (\Throwable $th) {
+            return response([
+                'status' => false,
+                'message' => 'Failed to See data'
+            ], 400);
+        }
+
     }
 }
